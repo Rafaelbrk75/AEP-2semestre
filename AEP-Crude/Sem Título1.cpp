@@ -16,6 +16,7 @@ int verificaSenha(char sen[70]);
 int armazena(char nome1[70], char senha2[70]);
 void adicionar();
 void cripto(char x[70]);
+void descripto(char nomeC[]);
 void leitura();
 
 
@@ -23,23 +24,27 @@ void leitura();
 int main() {
 	setlocale(LC_ALL, "Portuguese");
 	
-	char nome[70];
-	char senha[70];
-	
-	int i,key, fim, teste, cadastro, op = 1;
+	int key, fim, cadastro, op = 1;
 	fim = 0;
-	i = 0;
 	
 	do{
 		system("cls");
 		
-		printf("%s 1 - Adicionar\n", op == 1 ? "->" : "  ");
-        printf("%s 2 - Listar\n", op == 2 ? "->" : "  ");
-        printf("%s 3 - Créditos\n", op == 3 ? "->" : "  ");
-        printf("%s 4 - Remover\n", op == 4 ? "->" : "  ");
-        printf("%s 5 - Pesquisar\n", op == 5 ? "->" : "  ");
-        printf("%s 6 - Alterar\n", op == 6 ? "->" : "  ");
-        printf("%s 7 - Sair\n", op == 7 ? "->" : "  ");
+		printf("\n\n\n");
+        printf("\n                                         ___  ___    _____  __   __     ___  ___  __ \n");
+        printf("                                       /  |  /  /   /   _____/  /  | /  /  /  / /  / \n");
+        printf("                                      /  /|_/  /   /  ___/     /   |/  /  /  / /  / \n");
+        printf("                                     /  /  /  /   /  /____    /  /|   /  /  /_/  / \n");
+        printf("                                    /__/  /__/   / ______/   /_ / |_ /   \_____  / \n");
+        printf("\n\n\n\n");                                
+		
+		
+		printf("                                               %s 1 - ADICIONAR\n", op == 1 ? "->" : "  ");
+        printf("                                               %s 2 - LISTAR\n", op == 2 ? "->" : "  ");
+        printf("                                               %s 3 - ALTERAR\n", op == 3 ? "->" : "  ");
+        printf("                                               %s 4 - REMOVER\n", op == 4 ? "->" : "  ");
+        printf("                                               %s 5 - CRÉDITOS\n", op == 5 ? "->" : "  ");
+        printf("                                               %s 6 - SAIR\n", op == 6 ? "->" : "  ");
         
         key = getch();
 	    
@@ -47,10 +52,10 @@ int main() {
             key = getch(); 
             if (key == 72) {   
                 op--;
-                if (op < 1) op = 7;  
+                if (op < 1) op = 6;  
             } else if (key == 80) {  
                 op++;
-                if (op > 7) op = 1;  
+                if (op > 6) op = 1;  
             }
         } else if (key == 13) {
         	system("cls");
@@ -115,11 +120,13 @@ void adicionar(){
 	int i,teste,cadastro;
 		
 	printf("Informe seu nome: ");
-	gets(nome[totuser]);
+	fgets(nome[totuser], sizeof(nome[totuser]), stdin);
+	nome[totuser][strcspn(nome[totuser], "\n")] = '\0';
 		    	    
 	do{
 		printf("Informe uma senha (forte!): ");
-		gets(senha[totuser]);
+		fgets(senha[totuser], sizeof(senha[totuser]), stdin);
+		senha[totuser][strcspn(senha[totuser], "\n")] = '\0';
 		teste = verificaSenha(senha[totuser]);
 		if (teste == 0) printf("Senha fraca! Tente novamente.\n");
 	}while(teste != 1);
@@ -143,32 +150,25 @@ int verificaSenha(char sen[70]){
 	temMai =0;
 	temMin =0;
 	temN = 0;
+	temE = 0;
 	
 	if(strlen(sen) < 8){
 		return 0;
 	}
 	
-	for(i = 0; i < strlen(sen)-1 ; i++){
+	for(i = 0; i < strlen(sen); i++){
 		if(int(sen[i]) >= 48 && int(sen[i]) <= 57){
 			temN = 1;
-		}else 
-		
-		if(int(sen[i]) >= 65 && int(sen[i]) <= 90){
+		}else if(int(sen[i]) >= 65 && int(sen[i]) <= 90){
 			temMai = 1; 
-		}
-		
-		if(int(sen[i]) >= 97 && int(sen[i]) <= 122){
+		}else if(int(sen[i]) >= 97 && int(sen[i]) <= 122){
 			temMin = 1;
-		}
-		
-	/*	if(int(sen[i]) >= 48 && int(sen[i]) <= 57){
+		}else {
 			temE = 1;
-		}else{
-			return 0;
-		}*/	
+		}
 	}
 	
-	if(temMin == 1 && temMai == 1 && temN == 1){
+	if(temMin && temMai && temN && temE){
 		return 1;
 	}else{
 		return 0;
@@ -198,23 +198,33 @@ void cripto(char x[70]){
 	
 	j=0;
 	
-	for(i = 0, j = len - 1; i < j; i++, j--){
+	for(i=0; i < len; i++){
+		x[i] += 3;
+	}
+	
+	for(i = 0, j = len-1; i < j; i++, j--){
 		tmp = x[i];
         x[i] = x[j];
         x[j] = tmp;
 	}
 	
-	for(i=0; i < len; i++){
-		tmp = int(x[i]+3);
-		x[i] = tmp;
-	}
+	
 }
 
-void descripto(char nomeC[], char senhaC[]){
+void descripto(char nomeC[]){
 	int i, j;
 	char tmp;
+	int len = strlen(nomeC);
 	
-	for(i=strlen(nomeC), j=0;  )
+	for(i=0; i< len; i++){
+		nomeC[i] -= 3;
+	}
+	
+	for(i=0, j= len-1; i < j; i++, j--){
+		tmp = nomeC[i];
+		nomeC[i] = nomeC[j];
+		nomeC[j] = tmp;
+	}
 }
 
 void leitura(){
@@ -224,27 +234,54 @@ void leitura(){
 		return;
 	}
 	int x,i;
-	char linha[15],tmp[15];
+	char linha[15];
+	
+	totuser=0;
+    x=0;
 	
 	if (pont_arq != NULL) { 
-        totuser=0;
-        x=0;
+        
         while (fgets(linha, sizeof(linha), pont_arq) != NULL && strlen(linha)>0) { 
-          linha[strlen(linha)-1]='\0'; 
-            if (x%2==1){ 
-              totuser++; 
-              strcpy(nome[totuser-1],linha); 
+          linha[strcspn(linha, "\n" )]='\0'; 
+            if (x%2==0){  
+              strcpy(nome[totuser],linha);
+			  descripto(nome[totuser]); 
               }
             else {
-            	strcpy(senha[totuser-1],linha); 
+            	strcpy(senha[totuser],linha); 
+            	descripto(senha[totuser]);
                 totuser++;
 			}
             x++;  
         } 
         fclose(pont_arq);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+        printf("------------------------------------------------------------------------------------------------------------------------\n");
+        printf("USUÁRIO                                         SENHA\n");
+        printf("------------------------------------------------------------------------------------------------------------------------\n");
         
-        for(i=0; i< totuser; i++){
-        	printf("Nome %s    |    Senha: %s\n", descripto(nome[i]), descripto(senha[i]));
+        for(i=0; i < totuser; i++){
+        	printf("%s\n", nome[i]);
 		}
 	}
 }
+
+/*void alterarS(){
+	char nome1,senha1,;
+	int p;
+	
+	printf("Informe o nome do Usuário: ");
+	fgets(nome1, sizeof(nome1), stdin);
+	
+	if()
+}
+
+int buscaU(char y){
+	int i;
+	
+	for(i=0; i < totuser; i++){
+		if(strcmp(y, nome[i]) == 0){
+			return 1;
+		}else return 0;
+	}
+}*/
