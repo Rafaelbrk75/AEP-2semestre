@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <ctype.h>
-#include <cstdlib>  
 #include <conio.h>
 
 FILE *pont_arq;
@@ -18,9 +17,11 @@ void adicionar();
 void cripto(char x[70]);
 void descripto(char nomeC[]);
 void leitura();
+int buscaU(char y[]);
+void alterarS();
+void excluirU();
 
-
-
+//---------------------------------------
 int main() {
 	setlocale(LC_ALL, "Portuguese");
 	
@@ -76,12 +77,14 @@ int main() {
 		
 		        case 3:
 		    	    system("cls");
+		    	    alterarS();
 		    	    printf("Pressione qualquer tecla para sair...\n");
 		    	    getch();
 		        break;
 		
 		        case 4:
 		    	    system("cls");
+		    	    excluirU();
 		    	    printf("Pressione qualquer tecla para sair...\n");
 		    	    getch();
 		        break;
@@ -115,7 +118,7 @@ int main() {
 	
 	return 0;
 }
-
+//---------------------------------------
 void adicionar(){
 	int i,teste,cadastro;
 		
@@ -143,7 +146,7 @@ void adicionar(){
 
 	}
 }
-
+//---------------------------------------
 int verificaSenha(char sen[70]){
 	int temMai, temMin, temN, temE;
 	int i;
@@ -174,7 +177,7 @@ int verificaSenha(char sen[70]){
 		return 0;
 	}
 }
-
+//---------------------------------------
 int armazena(char nome1[70], char senha2[70]){
 	pont_arq = fopen("DadosDoUsuario.txt", "a+");
 	
@@ -190,7 +193,7 @@ int armazena(char nome1[70], char senha2[70]){
 		return 1;
 	}
 }
-
+//---------------------------------------
 void cripto(char x[70]){
 	int i,j;
 	char tmp;
@@ -210,7 +213,7 @@ void cripto(char x[70]){
 	
 	
 }
-
+//---------------------------------------
 void descripto(char nomeC[]){
 	int i, j;
 	char tmp;
@@ -226,7 +229,7 @@ void descripto(char nomeC[]){
 		nomeC[j] = tmp;
 	}
 }
-
+//---------------------------------------
 void leitura(){
 	pont_arq = fopen("DadosDoUsuario.txt", "r");
 	if (pont_arq == NULL){
@@ -265,23 +268,77 @@ void leitura(){
 		}
 	}
 }
-
-/*void alterarS(){
-	char nome1,senha1,;
+//---------------------------------------
+void alterarS(){
+	char nome1[100],senha1[100];
 	int p;
 	
-	printf("Informe o nome do Usuário: ");
+	printf("ALTERAR SENHA DO USUÁRIO\n\n");
+	printf("NOME DO USUÁRIO: ");
 	fgets(nome1, sizeof(nome1), stdin);
+	nome1[strcspn(nome1, "\n")] = '\0'; 
 	
-	if()
+	p = buscaU(nome1);
+	
+	if(p != -1){
+		printf("Informe a nova senha: ");
+		fgets(senha[p], sizeof(senha[p]), stdin);
+		senha[p][strcspn(senha[p], "\n")] = '\0';
+		printf("\nSenha atualizada com sucesso!\n");
+	}else{
+		printf("Usuário não identificado!");
+	}
 }
-
-int buscaU(char y){
+//---------------------------------------
+int buscaU(char y[]){
 	int i;
 	
 	for(i=0; i < totuser; i++){
 		if(strcmp(y, nome[i]) == 0){
-			return 1;
-		}else return 0;
+			return i;
+		}
 	}
-}*/
+	
+	return -1;
+}
+//---------------------------------------
+void excluirU(){
+	char nomeX[70];
+    int pos;
+    
+    printf("Informe o nome do usuário para excluir: ");
+    fgets(nomeX, sizeof(nomeX), stdin);
+    nomeX[strcspn(nomeX, "\n")] = '\0';
+    
+    pos = buscaU(nomeX);
+    
+    if (pos != -1) {
+        pont_arq = fopen("DadosDoUsuario.txt", "r");
+        FILE *tempFile = fopen("temp.txt", "w");
+        
+        if (pont_arq == NULL || tempFile == NULL) {
+            printf("Erro ao abrir os arquivos.\n");
+            return;
+        }
+        
+        char linha[70];
+        int linhaAtual = 0;
+        
+        while (fgets(linha, sizeof(linha), pont_arq)) {
+            if (linhaAtual != pos * 2 && linhaAtual != pos * 2 + 1) {
+                fputs(linha, tempFile);
+            }
+            linhaAtual++;
+        }
+        
+        fclose(pont_arq);
+        fclose(tempFile);
+        remove("DadosDoUsuario.txt");
+        rename("temp.txt", "DadosDoUsuario.txt");
+        
+        printf("Usuário excluído com sucesso!\n");
+    } else {
+        printf("Usuário não encontrado.\n");
+    }
+}
+
