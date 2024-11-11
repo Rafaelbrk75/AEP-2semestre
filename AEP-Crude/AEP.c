@@ -262,7 +262,7 @@ void cripto(char x[70]){
 	j=0;
 	
 	for(i=0; i < len; i++){
-		x[i] += 3;
+		x[i] += 4;
 	}
 	
 	for(i = 0, j = len-1; i < j; i++, j--){
@@ -280,7 +280,7 @@ void descripto(char nomeC[]){
 	int len = strlen(nomeC);
 	
 	for(i=0; i< len; i++){
-		nomeC[i] -= 3;
+		nomeC[i] -= 4;
 	}
 	
 	for(i=0, j= len-1; i < j; i++, j--){
